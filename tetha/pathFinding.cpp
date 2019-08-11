@@ -18,7 +18,7 @@ void PathFinding::find(int x, int y)
 	xGoal_ = x;
 	yGoal_ = y;
 
-	nodes_.push_back(Node(*this, 0, robot_->getX(), robot_->getY(), robot_->getAngle(), 0, 0));
+	nodes_.push_back(Node(*this, 0, robot_->getX(), robot_->getY(), 0, 0));
 	grid_.push_back(&(nodes_.front()));
 	
 	bool finished = false;
@@ -47,9 +47,9 @@ bool PathFinding::checkTrajectoire(int x1, int y1, int x2, int y2)
 {
 	int deltaX = x2-x1;
     int deltaY = y2-y1;
-	float norm = sqrt(deltaX*deltaX + deltaY*deltaY);
-    deltaX *=  (STEP/norm);
-    deltaY *=  (STEP/norm);
+	float norm = STEP/sqrt(deltaX*deltaX + deltaY*deltaY);
+    deltaX *=  norm;
+    deltaY *=  norm;
 	Robot robot(x1,y1,robot_->getRadius());
 	if (robot.collide()) return false;
 	
@@ -68,30 +68,19 @@ bool PathFinding::checkTrajectoire(int x1, int y1, int x2, int y2)
 	return true;
 }
 
-float PathFinding::eval(int x1, int y1, float angle, int x2, int y2)
+float PathFinding::eval(int x1, int y1, int x2, int y2)
 {
 	int deltaX = x2-x1;
 	int deltaY = y2-y1;
-	float erreurAngle = atan2f(deltaY,deltaX)-angle;
-	if (fabs(erreurAngle)>3.145159265)
-	{
-		if (erreurAngle<0)
-			erreurAngle+= 6.28318530718;
-		else
-			erreurAngle-= 6.28318530718;
-	}
-	float evaluation = sqrt(deltaX*deltaX+deltaY*deltaY)/robot_->getVitesse();
-	evaluation+=fabs(erreurAngle)/robot_->getVitesseRotation();
-	return evaluation;
+	return (deltaX*deltaX+deltaY*deltaY);
 }
 
-PathFinding::Node::Node(PathFinding &pathFinding, Node* parent, int x, int y, float angle, float evaluation, float time)
+PathFinding::Node::Node(PathFinding &pathFinding, Node* parent, int x, int y, float evaluation, float time)
 {
 	pathFinding_ = &pathFinding;
 	parent_ = parent;
 	x_ = x;
 	y_ = y;
-	angle_ = angle;
 	evaluation_ = evaluation;
 	time_ = time;
 }
@@ -102,7 +91,6 @@ PathFinding::Node::Node(Node &other)
 	parent_ = other.parent_;
 	x_ = other.x_;
 	y_ = other.y_;
-	angle_ = other.angle_;
 	evaluation_ = other.evaluation_;
 	time_ = other.time_;
 }
@@ -116,9 +104,8 @@ void PathFinding::Node::checkNode(int x, int y)
 		nextParent = parent_;
 	else
 		nextParent = this;
-	float nextAngle = atan2f(y-nextParent->y_,x-nextParent->x_);
-	float nextTime = nextParent->time_ + pathFinding_->eval(nextParent->x_, nextParent->y_,nextParent->angle_, x,y);
-	float nextEvaluation = nextTime + pathFinding_->eval(x,y,nextAngle, pathFinding_->xGoal_, pathFinding_->yGoal_);
+	float nextTime = nextParent->time_ + pathFinding_->eval(nextParent->x_, nextParent->y_, x,y);
+	float nextEvaluation = nextTime + pathFinding_->eval(x,y, pathFinding_->xGoal_, pathFinding_->yGoal_);
 	
 	int min=0;
 	int max= pathFinding_->grid_.size();
@@ -135,7 +122,7 @@ void PathFinding::Node::checkNode(int x, int y)
 		min = i;
 	  }
 	}
-	pathFinding_->nodes_.push_back(Node(*pathFinding_, nextParent, x, y, nextAngle, nextEvaluation, nextTime));
+	pathFinding_->nodes_.push_back(Node(*pathFinding_, nextParent, x, y, nextEvaluation, nextTime));
 	pathFinding_->grid_.insert(pathFinding_->grid_.begin()+max,&(pathFinding_->nodes_.back()));
 }
 
@@ -152,12 +139,13 @@ bool PathFinding::Node::explore()
 	int goalDiffY = pathFinding_->yGoal_ - y_;
 	if ((goalDiffX*goalDiffX + goalDiffY*goalDiffY) < (pathFinding_->STEP * pathFinding_->STEP))
 	{
-		nextX = pathFinding_->xGoal_;
 		return true;
 	}
 	for (int i = -1;i<2;i++)
 		for (int j= -1; j<2;j++)
 		{
+			if (!(i | j))
+				continue;
 			nextX = x_+i*GRIDSIZE;
 			nextY = y_+j*GRIDSIZE;
 			if(pathFinding_->explored_.find(((nextX/5)<<8)+nextY/5)!= pathFinding_->explored_.end())

@@ -14,11 +14,10 @@ private:
 		Node* parent_;
 		int x_;
 		int y_;
-		float angle_;
 		float evaluation_;
 		float time_;
 	public:
-		Node(PathFinding &pathFinding, Node* parent, int x, int y, float angle, float evaluation, float time);
+		Node(PathFinding &pathFinding, Node* parent, int x, int y, float evaluation, float time);
 		Node(Node &other);
 		int getX() {return x_;};
 		int getY() {return y_;};
@@ -41,5 +40,5 @@ public:
 	
 	void find(int x, int y);
 	bool checkTrajectoire(int x1, int y1, int x2, int y2);
-	float eval(int x1, int y1, float angle, int x2, int y2);
+	float eval(int x1, int y1, int x2, int y2);
 };
