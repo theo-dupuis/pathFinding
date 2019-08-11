@@ -15,27 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\Desktop\processing-3.3.7\projets\path finding\main\main.cpp">
+    <ClCompile Include="..\main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Desktop\processing-3.3.7\projets\path finding\main\obstacle.cpp">
+    <ClCompile Include="..\obstacle.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Desktop\processing-3.3.7\projets\path finding\main\pathFinding.cpp">
+    <ClCompile Include="..\pathFinding.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Desktop\processing-3.3.7\projets\path finding\main\robot.cpp">
+    <ClCompile Include="..\robot.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\Desktop\processing-3.3.7\projets\path finding\main\obstacle.h">
+    <ClInclude Include="..\obstacle.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\processing-3.3.7\projets\path finding\main\pathFinding.h">
+    <ClInclude Include="..\pathFinding.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Desktop\processing-3.3.7\projets\path finding\main\robot.h">
+    <ClInclude Include="..\robot.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
