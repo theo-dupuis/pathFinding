@@ -1,14 +1,12 @@
 #include "robot.h"
 
 std::vector<Obstacle> Robot::obstacles;
-Robot::Robot(int x, int y, int radius,float angle, float vitesse, float vitesseRotation)
+Robot::Robot(int x, int y, int radius,float angle)
 {
 	x_ = x;
 	y_ = y;
 	radius_ = radius;
 	angle_ = angle;
-	vitesse_ = vitesse;
-	vitesseRotation_ = vitesseRotation;
 }
 
 Robot::Robot(int x, int y, int radius)
