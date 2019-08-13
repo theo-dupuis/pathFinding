@@ -18,12 +18,11 @@ Robot::Robot(int x, int y, int radius)
 
 bool Robot::collide()
 {
-	//if (x_ <radius_ || x_+radius_ > 3000 || y_<radius_ || y_+radius_ > 2000) 
-	//	return true;
+	if (x_ <radius_ || x_+radius_ > 3000 || y_<radius_ || y_+radius_ > 2000) 
+		return true;
 	int nearestX;
 	int nearestY;
-	int deltaX;
-	int deltaY;
+	
 	for(Obstacle obstacle : obstacles)
 	{	
 		if (x_ > obstacle.getXMin())
@@ -59,8 +58,10 @@ bool Robot::collide()
 			else
 				nearestY = obstacle.getYMin();
 		
-		deltaX=x_ - nearestX;
-		deltaY=y_ - nearestY;
+		int deltaX = x_;
+		deltaX -= nearestX;
+		int deltaY = y_;
+		deltaY -= nearestY;
 		if ((deltaX *deltaX + deltaY*deltaY) < (radius_ * radius_))
 			return true;
 	}

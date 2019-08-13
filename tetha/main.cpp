@@ -16,7 +16,7 @@ int main()
 	PathFinding pathFinding(robot);
 	int elapsed_seconds = 0;
 	start = std::chrono::system_clock::now();
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10; ++i)
 	{
 		//pathFinding.find(1350, 855);
 

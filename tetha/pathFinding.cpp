@@ -27,7 +27,7 @@ void PathFinding::find(int x, int y)
 		finished=currentNode->explore();
 	}while(!finished);
 	
-	printf("%d noeuds explores\n", explored_.size());
+	printf("%d noeuds explores\n", grid_.size()+explored_.size());
 
 	if (checkTrajectoire(currentNode->getX(), currentNode->getY(), xGoal_, yGoal_))
 		currentNode = currentNode->getParent();
@@ -42,9 +42,12 @@ void PathFinding::find(int x, int y)
 
 bool PathFinding::checkTrajectoire(int x1, int y1, int x2, int y2)
 {
-	int deltaX = x2-x1;
-    int deltaY = y2-y1;
-	float norm = STEP/sqrt(deltaX*deltaX + deltaY*deltaY);
+	int deltaX = x2;
+	deltaX -= x1;
+	int deltaY = y2;
+	deltaY -= y1;
+	float norm = STEP;
+	norm /= sqrt(deltaX*deltaX + deltaY*deltaY);
     deltaX *=  norm;
     deltaY *=  norm;
 	Robot robot(x1,y1,radius_);
@@ -65,7 +68,6 @@ float PathFinding::eval(int x1, int y1, int x2, int y2)
 		return deltaX*0.41421356237 + deltaY;
 	else
 		return deltaY*0.41421356237 + deltaX;
-	//return sqrt(deltaX*deltaX+deltaY*deltaY);
 }
 
 PathFinding::Node::Node(PathFinding* pathFinding, Node* parent, int x, int y, float evaluation, float time)
@@ -136,19 +138,22 @@ bool PathFinding::Node::explore()
 {
 	int code = ((x_/5)<<8)+y_/5;
 	if (pathFinding_->explored_.find(code)!= pathFinding_->explored_.end()) return false;
-	int nextX;
-	int nextY;
 	
 	pathFinding_->explored_.insert(code);
 	
 	int goalDiffX = pathFinding_->xGoal_- x_;
 	int goalDiffY = pathFinding_->yGoal_ - y_;
+
 	if ((goalDiffX*goalDiffX + goalDiffY*goalDiffY) < (pathFinding_->STEP * pathFinding_->STEP))
 	{
 		return true;
 	}
-	for (int i = -1;i<2;i++)
-		for (int j= -1; j<2;j++)
+
+
+	int nextX;
+	int nextY;
+	for (int i = -1;i<2;++i)
+		for (int j= -1; j<2;++j)
 		{
 			if (!(i | j))
 				continue;
